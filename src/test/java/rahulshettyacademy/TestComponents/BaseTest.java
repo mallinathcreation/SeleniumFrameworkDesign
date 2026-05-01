@@ -2,13 +2,11 @@ package rahulshettyacademy.TestComponents;
 
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Properties;
-
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Dimension;
 import org.openqa.selenium.OutputType;
@@ -22,13 +20,10 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.BeforeSuite;
-
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 import PageObjects.LandingPage;
-import io.github.bonigarcia.wdm.WebDriverManager;
 
 public class BaseTest {
 
@@ -37,8 +32,7 @@ public class BaseTest {
 	public LandingPage landingpage;
 	// initilizationDriver() - this prepares our driver
 
-	public WebDriver initilizationDriver() throws IOException
-	{
+	public WebDriver initilizationDriver() throws IOException {
 		Properties prop = new Properties();
 		// System.getProperty("user.dir") --> helps to retrive our system project path
 		// (Eg, path of Selenium Framework Design
@@ -62,30 +56,35 @@ public class BaseTest {
 
 		if (browserName.contains("chrome")) {
 
-            ChromeOptions option = new ChromeOptions();
-            
-            option.addArguments("--remote-allow-origins=*");
-            if(browserName.contains("headless"))
-            {
-			option.addArguments("--remote-allow-origins=*").addArguments("headless");	
-            }
-            
+			ChromeOptions option = new ChromeOptions();
+
+			option.addArguments("--remote-allow-origins=*");
+			if (browserName.contains("headless")) {
+				option.addArguments("--remote-allow-origins=*").addArguments("headless");
+			}
+
 			System.setProperty("webdriver.chrome.driver", "D:\\Drivers\\chromedriver_win32\\chromedriver.exe");
 			driver = new ChromeDriver(option);
-			driver.manage().window().setSize(new Dimension(1440,900));
+			driver.manage().window().setSize(new Dimension(1440, 900));
 
 		}
 
-		else if (browserName.equalsIgnoreCase("edge")) {
-           EdgeOptions option2 = new EdgeOptions();
-           option2.addArguments("--remote-allow-origins=*");
+		else if (browserName.contains("edge")) {
+			EdgeOptions option2 = new EdgeOptions();
+			option2.addArguments("--remote-allow-origins=*");
+			if (browserName.contains("headless")) {
+				option2.addArguments("--remote-allow-origins=*").addArguments("--headless");
+			}
 			System.setProperty("webdriver.edge.driver", "D:\\Drivers\\edgedriver_win64\\msedgedriver.exe");
 			driver = new EdgeDriver(option2);
 		}
 
-		else if (browserName.equalsIgnoreCase("firefox")) {
+		else if (browserName.contains("firefox")) {
 			FirefoxOptions option1 = new FirefoxOptions();
 			option1.addArguments("--remote-allow-origins=*");
+			if (browserName.contains("headless")) {
+				option1.addArguments("--remote-allow-origins=*").addArguments("--headless");
+			}
 			System.setProperty("webdriver.gecko.driver", "D:\\Drivers\\geckodriver-v0.33.0-win64\\geckodriver.exe");
 			driver = new FirefoxDriver(option1);
 		}
@@ -95,8 +94,7 @@ public class BaseTest {
 		return driver;
 	}
 
-	public List<HashMap<String, String>> getJasonDataToMap(String filePath) throws IOException
-	{
+	public List<HashMap<String, String>> getJasonDataToMap(String filePath) throws IOException {
 		// read Jason to string
 		@SuppressWarnings("deprecation")
 		String jasonContent = FileUtils.readFileToString(new File(filePath));
@@ -108,8 +106,7 @@ public class BaseTest {
 		return data;
 	}
 
-	public String getScreenshot(String testCaseName, WebDriver driver) throws IOException
-	{
+	public String getScreenshot(String testCaseName, WebDriver driver) throws IOException {
 		TakesScreenshot ts = (TakesScreenshot) driver;
 		File source = ts.getScreenshotAs(OutputType.FILE);
 		File file = new File(System.getProperty("user.dir") + "//reports//" + testCaseName + ".png");
@@ -118,8 +115,7 @@ public class BaseTest {
 	}
 
 	@BeforeMethod(alwaysRun = true)
-	public LandingPage launchApplication() throws IOException
-	{
+	public LandingPage launchApplication() throws IOException {
 		driver = initilizationDriver();
 		landingpage = new LandingPage(driver);
 		landingpage.goTo();
@@ -128,11 +124,11 @@ public class BaseTest {
 	}
 
 	@AfterMethod(alwaysRun = true)
-	public void tearDown()
-	{
-		//driver.close(); -- this gives some unnecesary erros like "java.net.SocketException: Connection reset"
-		//to avoid it use driver.quit();
-		
+	public void tearDown() {
+		// driver.close(); -- this gives some unnecesary erros like
+		// "java.net.SocketException: Connection reset"
+		// to avoid it use driver.quit();
+
 		driver.quit();
 	}
 

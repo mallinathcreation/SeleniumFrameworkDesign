@@ -25,7 +25,6 @@ import PageObjects.Checkout;
 import PageObjects.ConfirmationPage;
 import PageObjects.LandingPage;
 import PageObjects.ProductCatalogue;
-import io.github.bonigarcia.wdm.WebDriverManager;
 import rahulshettyacademy.TestComponents.BaseTest;
 
 public class ErrorValidationTest  extends BaseTest{
